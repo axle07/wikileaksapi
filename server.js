@@ -13,6 +13,12 @@ app.use(bodyParser.json());
 
 var db;
 
+/**
+*   process.env.MONGODB_URI is mapped to MONGODB_URI as an environmental variable
+*   so that needs to be setup on any machines using the db.
+*   format is: mongodb://localhost:27017/clintonEmails
+*   TODO remove db from connectionstring so one server can handle multiple leaks.
+*/
 mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
     if (err) {
         console.log(err);
@@ -20,7 +26,6 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
     }
 
     db = database;
-    console.log("Database connection ready");
 
     var server = app.listen(process.env.PORT || 8080, function() {
         var port = server.address().port;
@@ -41,7 +46,7 @@ function handleError(res, reason, message, code) {
  */
 
 app.get("/emails/:id", function(req, res) {
-    db.collection(EMAIL_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+    db.collection(EMAIL_COLLECTION).findOne({id: parseInt(req.params.id)}, function(err, doc) {
         if (err) {
             hadleError(res, err.message, "Failed to get email");
         } else {
