@@ -21,7 +21,7 @@ var limiter = new rateLimit({
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
-app.use('/emails/', limiter);
+app.use('/clinton-emails/', limiter);
 
 var db;
 
@@ -62,7 +62,7 @@ function handleError(res, reason, message, code) {
  *      GET: finds emails by id
  */
 
-app.get("/emails/:id", function(req, res) {
+app.get("/clinton-emails/:id", function(req, res) {
     db.collection(EMAIL_COLLECTION).findOne({id: parseInt(req.params.id)}, function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
