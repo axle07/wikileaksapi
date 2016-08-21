@@ -1,0 +1,18 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 48px auto;
+    max-width: 960px;
+    text-align: center;
+    font-size: 110%;
+    line-height: 150%;
+}
+
+p {
+    margin-top: 24px;
+}
+
+code {
+    background-color: black;
+    color: white;
+    padding: 14px;
+}
