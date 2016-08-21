@@ -46,9 +46,8 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 });
 
 // Static Routes
-app.get("/", function(req, res) {
-    res.send("Hello Interwebs!");
-});
+
+app.use(express.static('public'));
 
 // API Routes
 
