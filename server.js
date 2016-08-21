@@ -57,11 +57,12 @@ function handleError(res, reason, message, code) {
     res.status(code || 500).json({"error": message});
 }
 
-/* "/emails/:id"
+
+/* 
  *      GET: finds emails by id
  */
 
-app.get("/clinton-emails/:id", function(req, res) {
+app.get("/clinton-emails/id/:id", function(req, res) {
     db.collection(EMAIL_COLLECTION).findOne({id: parseInt(req.params.id)}, function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
@@ -70,4 +71,50 @@ app.get("/clinton-emails/:id", function(req, res) {
         }
     });
 });
+
+/* 
+ *      GET: finds emails by sender
+ */
+
+app.get("/clinton-emails/from/:from", function(req, res) {
+    db.collection(EMAIL_COLLECTION).find({from: req.params.from}).toArray( function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get email");
+        } else {
+            console.log(doc)
+            res.status(200).json(doc);
+        }
+    });
+});
+
+/* 
+ *      GET: finds emails by recipient
+ */
+
+app.get("/clinton-emails/to/:to", function(req, res) {
+    db.collection(EMAIL_COLLECTION).find({to: req.params.to}).toArray( function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get email");
+        } else {
+            console.log(doc)
+            res.status(200).json(doc);
+        }
+    });
+});
+
+/* 
+ *      GET: finds emails by subject
+ */
+
+app.get("/clinton-emails/subject/:subject", function(req, res) {
+    db.collection(EMAIL_COLLECTION).find({subject: req.params.subject}).toArray( function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get email");
+        } else {
+            console.log(doc)
+            res.status(200).json(doc);
+        }
+    });
+});
+
 
