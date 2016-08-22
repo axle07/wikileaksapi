@@ -1,7 +1,7 @@
 {
-  "name": "MEAN",
+  "name": "WikiLeaks API",
   "version": "1.0.0",
-  "description": "A MEAN app that allows users to manage contact lists",
+  "description": "A developer API for accessing WikiLeaks data.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,7 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "express-rate-limit": "^2.4.0",
-    "mongodb": "^2.1.6"
+    "mongodb": "^2.1.6",
+    "passport": "^0.3.2"
   }
 }
