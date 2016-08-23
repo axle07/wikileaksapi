@@ -68,6 +68,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+// TODO refactor routes out to their own file.
+
 // Routes
 app.get("/", function(req, res) {
     res.render("index.ejs");
