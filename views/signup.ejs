@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>The Hillary Clinton Email Archive API</title>
+        <meta name="description" content="Hillary Clinton Emails API server">
+        <meta name="author" content="a&t">
+
+        <link rel="stylesheet" href="css/styles.css">
+
+        <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <nav>
+            <a href="/">API Docs</a>
+            <a href="/login">Log In</a>
+            <b>Sign Up</b>
+         </nav>
+        <h1>Sign up for API access!</h1>
+        <!-- Show any auth response messages -->
+        <% if (message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+        <% } %>
+
+        <form action="/signup" method="post">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <button type="submit" class="btn btn-warning btn-lg">Signup</button>
+        </form>
+    </body>
+</html>

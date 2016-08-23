@@ -1,5 +1,5 @@
 {
-  "name": "WikiLeaks API",
+  "name": "WikiLeaksAPI",
   "version": "1.0.0",
   "description": "A developer API for accessing WikiLeaks data.",
   "main": "server.js",
@@ -8,10 +8,20 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "body-parser": "^1.13.3",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.1",
     "express": "^4.13.3",
     "express-rate-limit": "^2.4.0",
+    "express-session": "^1.14.0",
+    "method-override": "^2.3.6",
     "mongodb": "^2.1.6",
-    "passport": "^0.3.2"
+    "mongoose": "^4.5.9",
+    "morgan": "^1.7.0",
+    "node-uuid": "^1.4.7",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   }
 }
