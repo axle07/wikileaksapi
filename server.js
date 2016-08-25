@@ -116,8 +116,7 @@ app.get("/logout", function(req, res) {
 app.post("/regenerate", isLoggedIn, function(req, res) {
     var model = new UserModel();
     var key = model.generateApiKey();
-    console.log("user: ", req.user);
-    console.log("new key: ", key);
+
     var conditions = { email: req.user.email },
         update = { $set: { api_key: key } };
 
@@ -144,9 +143,30 @@ function isLoggedIn(req, res, next) {
     res.redirect("/");
 }
 
+// API key middleware
+function isValidKey(req, res, next) {
+    var key = req.params.key;
+
+    userdb.collection(USERS_COLLECTION).findOne({ api_key: key}, function(err, doc) {
+        if (err)
+            handleError(res, err.message, "Failed to get user");
+        if (!doc)
+            handleError(res, "Invalid API key", "Invalid API key");
+        if (doc)
+            return next();
+    });
+}
 /*
  *      GET: finds emails by id
  */
+app.get("/clinton-emails/id/:key/:id", isValidKey, function(req, res) {
+    db.collection(EMAIL_COLLECTION).findOne({ id: parseInt(req.params.id)}, function(err, doc) {
+        if (err)
+            handleError(res, err.message, "Failed to get email");
+
+        res.status(200).json(doc);
+    });
+});
 
 app.get("/clinton-emails/id/:id", function(req, res) {
     db.collection(EMAIL_COLLECTION).findOne({id: parseInt(req.params.id)}, function(err, doc) {
@@ -167,7 +187,6 @@ app.get("/clinton-emails/from/:from", function(req, res) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
-            console.log(doc)
             res.status(200).json(doc);
         }
     });
@@ -182,7 +201,6 @@ app.get("/clinton-emails/to/:to", function(req, res) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
-            console.log(doc)
             res.status(200).json(doc);
         }
     });
@@ -197,7 +215,6 @@ app.get("/clinton-emails/subject/:subject", function(req, res) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
-            console.log(doc)
             res.status(200).json(doc);
         }
     });
