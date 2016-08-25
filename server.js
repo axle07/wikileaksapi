@@ -6,6 +6,7 @@ var rateLimit = require("express-rate-limit");
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+var UserModel = require('./models/user');
 
 // Needed due to version of express
 var morgan = require('morgan');
@@ -20,6 +21,7 @@ var RATE_LIMIT_MAX_REQUESTS = process.env.RATE_LIMIT_MAX_REQUESTS;
 var RATE_LIMIT_TIME_PERIOD = process.env.RATE_LIMIT_TIME_PERIOD;
 var RATE_LIMIT_THROTTLE_TIME = process.env.RATE_LIMIT_THROTTLE_TIME;
 var USER_DB_URI = "mongodb://localhost:27017/users"; // TODO set this up as a environmental var
+var USERS_COLLECTION = "users";
 
 var app = express();
 
@@ -34,7 +36,7 @@ app.use(bodyParser.json());
 app.use('/clinton-emails/', limiter);
 app.set('view engine', 'ejs');
 var db;
-
+var userdb;
 /**
 *   process.env.MONGODB_URI is mapped to MONGODB_URI as an environmental variable
 *   so that needs to be setup on any machines using the db.
@@ -54,7 +56,14 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
         console.log("App now running on port", port);
     });
 });
+mongodb.MongoClient.connect(USER_DB_URI, function (err, database) {
+    if (err) {
+        console.log(err);
+        process.exit(1);
+    }
 
+    userdb = database;
+});
 // Setup auth stuff
 mongoose.connect(USER_DB_URI);
 
@@ -104,6 +113,21 @@ app.get("/logout", function(req, res) {
     res.redirect("/");
 });
 
+app.post("/regenerate", isLoggedIn, function(req, res) {
+    var model = new UserModel();
+    var key = model.generateApiKey();
+    console.log("user: ", req.user);
+    console.log("new key: ", key);
+    var conditions = { email: req.user.email },
+        update = { $set: { api_key: key } };
+
+    userdb.collection(USERS_COLLECTION).update(conditions, update, function(err, doc){
+        if (err)
+            handleError(res, err.message, "Failed to regenerate key");
+    });
+
+    res.redirect("/profile");
+});
 
 // API Routes
 
