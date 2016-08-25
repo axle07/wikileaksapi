@@ -41,6 +41,20 @@ p {
     margin-top: 24px;
 }
 
+form {
+    max-width: 260px;
+    margin: 36px auto;
+    text-align: left;
+}
+
+form div.form-group {
+    margin-bottom: 18px;
+}
+
+form div.form-group input {
+    float: right;
+}
+
 code {
     background-color: black;
     color: white;
@@ -52,6 +66,12 @@ button {
     height: 40px;
     background-color: #bf1d1d;
     color: white;
+}
+
+.whoops {
+    position: absolute;
+    bottom: 0;
+    left: calc(100% / 2.43)
 }
 
 /* from bootstrap */
