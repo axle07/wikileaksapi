@@ -81,7 +81,7 @@ app.use(flash());
 
 // Routes
 app.get("/", function(req, res) {
-    res.render("index.ejs");
+    res.render("index.ejs", { user: req.user });
 });
 
 app.get("/profile", isLoggedIn, function(req, res) {

@@ -17,22 +17,24 @@
 
     <body>
         <nav>
+            <a href="/logout">Logout</a>
             <a href="/">API Docs</a>
-            <a href="/login">Log In</a>
-            <a href="/singup">Sign Up</a>
         </nav>
         <div class="page-header text-center">
             <h1>Profile Page</h1>
-            <a href="/logout" class="btn btn-default btn-sm">Logout</a>
         </div>
 
         <p>
             <strong>email</strong>: <%= user.email %>
+        </p>
+        <p>
             <strong>API Key</strong>: <%= user.api_key %>
         </p>
 
-        <form action="/regenerate" method="post">
-           <button type="submit" class="btn btn-warning btn-lg">Get new key</button>
-        </form>
+        <p>
+            <form action="/regenerate" method="post">
+                <button type="submit" class="btn btn-warning btn-lg">Get new key</button>
+            </form>
+        </p>
     </body>
 </html>

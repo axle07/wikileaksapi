@@ -17,10 +17,15 @@
 
     <body>
         <nav>
-            <a href="/">API Docs</a>
-            <a href="/login">Log In</a>
-            <a href="/signup">Sign Up</a>
-         </nav>
+	        <% if (typeof user === "undefined") { %>
+	        	<a href="/">API Docs</a>
+	        	<a href="/login">Log In</a>
+	        	<a href="/signup">Sign Up</a>
+	        <% } else { %>
+	        	<a href="/logout">Logout</a>
+	        	<a href="/">API Docs</a>
+	        <% } %>
+        </nav>
         <h1>Hillary Clinton Email Archive API</h1>
         <p>A publicly available API of the WikiLeaks <a href="https://wikileaks.org/clinton-emails/">Hillary Clinton Email Archive</a>.</p>
         <h2>API usage:</h2>
