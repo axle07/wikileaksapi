@@ -23,17 +23,31 @@
 	        	<a href="/signup">Sign Up</a>
 	        <% } else { %>
 	        	<a href="/logout">Logout</a>
-	        	<a href="/">API Docs</a>
+	        	<a href="/profile">Profile</a>
 	        <% } %>
         </nav>
         <h1>Hillary Clinton Email Archive API</h1>
         <p>A publicly available API of the WikiLeaks <a href="https://wikileaks.org/clinton-emails/">Hillary Clinton Email Archive</a>.</p>
-        <h2>API usage:</h2>
+        <h2>Authentication</h2>
         <p>All requests must be sent with a token, which requires <a href="#">an account</a>.</p>
-        <p>Requests follow this format:</p>
-        <p><code>https://leaksapi.com/clinton-emails/&lt;APIKEY&gt;/&lt;ID&gt;</code></p>
-        <p>The "APIKEY" is the API Key that you received from us.</p>
-        </p>The "id" is the same email id used by the Wikileaks <a href="https://wikileaks.org/clinton-emails/">Hillary Clinton Email Archive</a>.</p>
-        <p>Issues?  Email leaksApi at gmail.</p>
+        <h2>Endpoints</h2>
+        <h3>Search emails by Wikileaks ID:</h3>
+        <p><code>https://leaksapi.com/clinton-emails/id/&lt;APIKEY&gt;/&lt;ID&gt;</code></p>
+        <p>"ID" is the same email id used by the Wikileaks <a href="https://wikileaks.org/clinton-emails/">Hillary Clinton Email Archive</a>.</p>
+        <p>Returns: a JSON object</p>
+        <br>
+        <h3>Search emails by sender:</h3>
+        <p><code>https://leaksapi.com/clinton-emails/from/&lt;APIKEY&gt;/&lt;NAME OF SENDER&gt;</code></p>
+        <p>Returns: an array of JSON objects</p>
+        <br>
+        <h3>Search emails by recipient:</h3>
+        <p><code>https://leaksapi.com/clinton-emails/to/&lt;APIKEY&gt;/&lt;NAME OF RECIPIENT&gt;</code></p>
+        <p>Returns: an array of JSON objects</p>
+        <br>
+        <h3>Search emails by subject:</h3>
+        <p><code>https://leaksapi.com/clinton-emails/subject/&lt;APIKEY&gt;/&lt;SUBJECT OF EMAIL&gt;</code></p>
+        <p>Returns: an array of JSON objects</p>
+        <br>
+        <p>Issues?  Email leaksapi@gmail.com</p>
     </body>
 </html>
