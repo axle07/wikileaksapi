@@ -8,9 +8,6 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var UserModel = require('./models/user');
 
-// Needed due to version of express
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
@@ -68,8 +65,6 @@ mongodb.MongoClient.connect(USER_DB_URI, function (err, database) {
 mongoose.connect(USER_DB_URI);
 
 require('./config/passport.js')(passport); // pass passport for config
-app.use(morgan('dev'));
-app.use(cookieParser());
 app.use(bodyParser());
 
 app.use(session({ secret: "alargewellfedarmadilloisahappycreature" }));
