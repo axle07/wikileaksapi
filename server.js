@@ -1,3 +1,4 @@
+// Load libs
 var express = require("express");
 var path = require("path");
 var bodyParser = require("body-parser");
@@ -7,25 +8,18 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
 var UserModel = require('./models/user');
-
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
-var ObjectId = mongodb.ObjectID;
-
-var EMAIL_COLLECTION = "emails";
-var RATE_LIMIT_MAX_REQUESTS = process.env.RATE_LIMIT_MAX_REQUESTS;
-var RATE_LIMIT_TIME_PERIOD = process.env.RATE_LIMIT_TIME_PERIOD;
-var RATE_LIMIT_THROTTLE_TIME = process.env.RATE_LIMIT_THROTTLE_TIME;
-var USER_DB_URI = "mongodb://localhost:27017/users"; // TODO set this up as a environmental var
-var USERS_COLLECTION = "users";
+// Load config and envrionmental vars
+var config = require('./config/config');
 
 var app = express();
 
 var limiter = new rateLimit({
-    windowMs: process.env.RATE_LIMIT_TIME_PERIOD,
-    max: process.env.RATE_LIMIT_MAX_REQUESTS,
-    delayMs: process.env.RATE_LIMIT_THROTTLE_TIME
+    windowMs: config.rateTimePeriod,
+    max: config.maxRequests,
+    delayMs: config.rateThrotTime
 });
 
 app.use(express.static(__dirname + "/public"));
@@ -35,12 +29,12 @@ app.set('view engine', 'ejs');
 var db;
 var userdb;
 /**
-*   process.env.MONGODB_URI is mapped to MONGODB_URI as an environmental variable
+*   process.env.mongoDbUri is mapped to mongoDbUri as an environmental variable
 *   so that needs to be setup on any machines using the db.
 *   format is: mongodb://localhost:27017/clintonEmails
 *   TODO remove db from connectionstring so one server can handle multiple leaks.
 */
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
+mongodb.MongoClient.connect(config.mongoDbUri, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -53,7 +47,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
         console.log("App now running on port", port);
     });
 });
-mongodb.MongoClient.connect(USER_DB_URI, function (err, database) {
+mongodb.MongoClient.connect(config.userDbUri, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -62,7 +56,7 @@ mongodb.MongoClient.connect(USER_DB_URI, function (err, database) {
     userdb = database;
 });
 // Setup auth stuff
-mongoose.connect(USER_DB_URI);
+mongoose.connect(config.userDbUri);
 
 require('./config/passport.js')(passport); // pass passport for config
 app.use(bodyParser());
@@ -115,7 +109,7 @@ app.post("/regenerate", isLoggedIn, function(req, res) {
     var conditions = { email: req.user.email },
         update = { $set: { api_key: key } };
 
-    userdb.collection(USERS_COLLECTION).update(conditions, update, function(err, doc){
+    userdb.collection(config.usersCollection).update(conditions, update, function(err, doc){
         if (err)
             handleError(res, err.message, "Failed to regenerate key");
     });
@@ -142,7 +136,7 @@ function isLoggedIn(req, res, next) {
 function isValidKey(req, res, next) {
     var key = req.params.key;
 
-    userdb.collection(USERS_COLLECTION).findOne({ api_key: key}, function(err, doc) {
+    userdb.collection(config.usersCollection).findOne({ api_key: key}, function(err, doc) {
         if (err)
             handleError(res, err.message, "Failed to get user");
         if (!doc)
@@ -156,7 +150,7 @@ function isValidKey(req, res, next) {
  *      GET: finds emails by id
  */
 app.get("/clinton-emails/id/:key/:id", isValidKey, function(req, res) {
-    db.collection(EMAIL_COLLECTION).findOne({ id: parseInt(req.params.id)}, function(err, doc) {
+    db.collection(config.emailCollection).findOne({ id: parseInt(req.params.id)}, function(err, doc) {
         if (err)
             handleError(res, err.message, "Failed to get email");
 
@@ -168,7 +162,7 @@ app.get("/clinton-emails/id/:key/:id", isValidKey, function(req, res) {
  *      GET: finds emails by sender
  */
 app.get("/clinton-emails/from/:key/:from", isValidKey, function(req, res) {
-    db.collection(EMAIL_COLLECTION).find({from: req.params.from}).toArray( function(err, doc) {
+    db.collection(config.emailCollection).find({from: req.params.from}).toArray( function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
@@ -181,7 +175,7 @@ app.get("/clinton-emails/from/:key/:from", isValidKey, function(req, res) {
  *      GET: finds emails by recipient
  */
 app.get("/clinton-emails/to/:key/:to", isValidKey, function(req, res) {
-    db.collection(EMAIL_COLLECTION).find({to: req.params.to}).toArray( function(err, doc) {
+    db.collection(config.emailCollection).find({to: req.params.to}).toArray( function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
@@ -194,7 +188,7 @@ app.get("/clinton-emails/to/:key/:to", isValidKey, function(req, res) {
  *      GET: finds emails by subject
  */
 app.get("/clinton-emails/subject/:key/:subject", isValidKey, function(req, res) {
-    db.collection(EMAIL_COLLECTION).find({subject: req.params.subject}).toArray( function(err, doc) {
+    db.collection(config.emailCollection).find({subject: req.params.subject}).toArray( function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to get email");
         } else {
