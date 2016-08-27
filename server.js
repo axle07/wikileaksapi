@@ -3,7 +3,6 @@ var express = require("express");
 var path = require("path");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
-var rateLimit = require("express-rate-limit");
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
@@ -13,14 +12,9 @@ var session = require('express-session');
 
 // Load config and envrionmental vars
 var config = require('./config/config');
+var limiter = require('./config/limiter');
 
 var app = express();
-
-var limiter = new rateLimit({
-    windowMs: config.rateTimePeriod,
-    max: config.maxRequests,
-    delayMs: config.rateThrotTime
-});
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
