@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 // Load config and envrionmental vars
+var config = require('./config/config');
 var limiter = require('./config/limiter');
 
 // Setup passport with config
@@ -21,7 +22,7 @@ app.use(bodyParser.json());
 app.use('/clinton-emails/', limiter);
 app.set('view engine', 'ejs');
 app.use(bodyParser());
-app.use(session({ secret: "alargewellfedarmadilloisahappycreature" }));
+app.use(session({ secret: config.sessionSecret }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
