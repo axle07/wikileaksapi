@@ -57,4 +57,43 @@ module.exports = function (app, passport) {
             }
         });
     });
+
+    /*
+     *      GET: all senders
+     */
+    app.get("/clinton-emails/from/:key/", isValidKey, function(req, res) {
+        db.emails.collection(config.emailCollection).distinct("from", function(err, doc) {
+            if (err) {
+                handleError(res, err.message, "Failed to get email");
+            } else {
+                res.status(200).json(doc);
+            }
+        });
+    });
+
+    /*
+     *      GET: all recipients
+     */
+    app.get("/clinton-emails/to/:key/", isValidKey, function(req, res) {
+        db.emails.collection(config.emailCollection).distinct("to", function(err, doc) {
+            if (err) {
+                handleError(res, err.message, "Failed to get email");
+            } else {
+                res.status(200).json(doc);
+            }
+        });
+    });
+
+    /*
+     *      GET: all subjects
+     */
+    app.get("/clinton-emails/subject/:key/", isValidKey, function(req, res) {
+        db.emails.collection(config.emailCollection).distinct("subject", function(err, doc) {
+            if (err) {
+                handleError(res, err.message, "Failed to get email");
+            } else {
+                res.status(200).json(doc);
+            }
+        });
+    });
 }
