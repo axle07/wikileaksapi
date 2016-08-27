@@ -1,3 +1,4 @@
+// config/config.js
 module.exports = {
 
     emailCollection: "emails",
