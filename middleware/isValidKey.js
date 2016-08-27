@@ -1,6 +1,6 @@
 // middleware/isValidKey.js
 
-// Load dbs
+// Load reqs
 var config = require('../config/config');
 var db = require('../config/databases');
 var handleError = require('./handleError');

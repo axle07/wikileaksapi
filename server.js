@@ -4,21 +4,11 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var passport = require('passport');
 var flash = require('connect-flash');
-var UserModel = require('./models/user');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
 // Load config and envrionmental vars
-var config = require('./config/config');
 var limiter = require('./config/limiter');
-
-// Load Middleware
-var isLoggedIn = require('./middleware/isLoggedIn');
-var isValidKey = require('./middleware/isValidKey');
-var handleError = require('./middleware/handleError');
-
-// Load DB connections
-var db = require('./config/databases');
 
 // Setup passport with config
 require('./config/passport.js')(passport);
@@ -36,112 +26,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+// Routes
+require('./routes/static')(app, passport);
+require('./routes/clinton-emails')(app, passport);
 
 var server = app.listen(process.env.PORT || 8080, function() {
     var port = server.address().port;
     console.log("App now running on port", port);
 });
 
-// TODO refactor routes out to their own file.
-
-// Routes
-app.get("/", function(req, res) {
-    res.render("index.ejs", { user: req.user });
-});
-
-app.get("/profile", isLoggedIn, function(req, res) {
-    res.render("profile.ejs", { user: req.user });
-});
-
-app.get("/signup", function(req, res) {
-    res.render("signup.ejs", { message: req.flash('signupMessage') });
-});
-
-app.post("/signup", passport.authenticate('local-signup', {
-    successRedirect: "/profile",
-    failureRedirect: "/signup",
-    failureFlash: true
-}));
-
-app.get("/login", function(req, res) {
-    res.render("login.ejs", { message: req.flash('loginMessage') });
-});
-
-app.post("/login", passport.authenticate('local-login', {
-    successRedirect: "/profile",
-    failureRedirect: "/login",
-    failureFlash: true
-}));
-
-app.get("/logout", function(req, res) {
-    req.logout();
-    res.redirect("/");
-});
-
-app.post("/regenerate", isLoggedIn, function(req, res) {
-    var model = new UserModel();
-    var key = model.generateApiKey();
-
-    var conditions = { email: req.user.email },
-        update = { $set: { api_key: key } };
-
-    db.users.collection(config.usersCollection).update(conditions, update, function(err, doc){
-        if (err)
-            handleError(res, err.message, "Failed to regenerate key");
-    });
-
-    res.redirect("/profile");
-});
-
-// API Routes
-
-/*
- *      GET: finds emails by id
- */
-app.get("/clinton-emails/id/:key/:id", isValidKey, function(req, res) {
-    db.emails.collection(config.emailCollection).findOne({ id: parseInt(req.params.id)}, function(err, doc) {
-        if (err)
-            handleError(res, err.message, "Failed to get email");
-
-        res.status(200).json(doc);
-    });
-});
-
-/*
- *      GET: finds emails by sender
- */
-app.get("/clinton-emails/from/:key/:from", isValidKey, function(req, res) {
-    db.emails.collection(config.emailCollection).find({from: req.params.from}).toArray( function(err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to get email");
-        } else {
-            res.status(200).json(doc);
-        }
-    });
-});
-
-/*
- *      GET: finds emails by recipient
- */
-app.get("/clinton-emails/to/:key/:to", isValidKey, function(req, res) {
-    db.emails.collection(config.emailCollection).find({to: req.params.to}).toArray( function(err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to get email");
-        } else {
-            res.status(200).json(doc);
-        }
-    });
-});
-
-/*
- *      GET: finds emails by subject
- */
-app.get("/clinton-emails/subject/:key/:subject", isValidKey, function(req, res) {
-    db.emails.collection(config.emailCollection).find({subject: req.params.subject}).toArray( function(err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to get email");
-        } else {
-            res.status(200).json(doc);
-        }
-    });
-});
