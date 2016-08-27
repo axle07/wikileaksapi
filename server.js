@@ -12,6 +12,11 @@ var session = require('express-session');
 var config = require('./config/config');
 var limiter = require('./config/limiter');
 
+// Load Middleware
+var isLoggedIn = require('./middleware/isLoggedIn');
+var isValidKey = require('./middleware/isValidKey');
+var handleError = require('./middleware/handleError');
+
 // Load DB connections
 var db = require('./config/databases');
 
@@ -89,33 +94,6 @@ app.post("/regenerate", isLoggedIn, function(req, res) {
 });
 
 // API Routes
-
-// Generic error handler used by all endpoints
-function handleError(res, reason, message, code) {
-    console.log("Error: " + reason);
-    res.status(code || 500).json({"error": message});
-}
-
-// Logged in middleware
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-    res.redirect("/");
-}
-
-// API key middleware
-function isValidKey(req, res, next) {
-    var key = req.params.key;
-
-    db.users.collection(config.usersCollection).findOne({ api_key: key}, function(err, doc) {
-        if (err)
-            handleError(res, err.message, "Failed to get user");
-        if (!doc)
-            handleError(res, "Invalid API key", "Invalid API key");
-        if (doc)
-            return next();
-    });
-}
 
 /*
  *      GET: finds emails by id
