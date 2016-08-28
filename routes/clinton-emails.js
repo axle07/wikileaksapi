@@ -11,7 +11,7 @@ module.exports = function (app, passport) {
      *      GET: finds emails by id
      */
     app.get("/clinton-emails/id/:key/:id", isValidKey, function(req, res) {
-        db.emails.collection(config.emailCollection).findOne({ id: parseInt(req.params.id)}, function(err, doc) {
+        db.emails.collection(config.emailCollection).findOne({ id: parseInt(req.params.id)}, {_id: 0}, function(err, doc) {
             if (err)
                 handleError(res, err.message, "Failed to get email");
 
