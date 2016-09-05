@@ -9,5 +9,5 @@ module.exports = {
     rateTimePeriod: process.env.RATE_LIMIT_TIME_PERIOD,
     rateThrotTime: process.env.RATE_LIMIT_THROTTLE_TIME,
     sessionSecret: process.env.SESSION_SECRET,
-
+    letsEncryptKey: process.env.LETS_ENCRYPT_KEY,
 }
