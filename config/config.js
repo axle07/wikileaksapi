@@ -10,4 +10,5 @@ module.exports = {
     rateThrotTime: process.env.RATE_LIMIT_THROTTLE_TIME,
     sessionSecret: process.env.SESSION_SECRET,
     letsEncryptKey: process.env.LETS_ENCRYPT_KEY,
+    letsEncryptKey2: process.env.LETS_ENCRYPT_KEY2,
 }

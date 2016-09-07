@@ -82,9 +82,14 @@ module.exports = function (app, passport) {
     });
 
     /*
-     * GET: temp route for lets encrypt confirmation
+     * GET: temp routes for lets encrypt confirmation
      */
     app.get("/.well-known/acme-challenge/Wpu6fyQ43iMguzsL3x7d7gU78LAX96OH3ylXFqWN_Jc", function(req, res) {
         res.send(config.letsEncryptKey);
     });
+
+    app.get("/.well-known/acme-challenge/7pWz7MAY93P38RmkBq6kPrLLrsTelgsdmWap3C9De6E", function(req, res) {
+        res.send(config.letsEncryptKey2);
+    });
+
 }
