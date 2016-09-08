@@ -27,10 +27,13 @@ module.exports = function (app, passport) {
      *  GET: Loads the signup page
      */
     app.get("/signup", function(req, res) {
+        console.log("headers: ", req.headers);
         // Check if Production and no SSL
-        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https")
-             res.redirect("https://www.leaksapi.com/signup");
-        res.render("signup.ejs", { message: req.flash('signupMessage') });
+        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https") {
+            res.redirect("https://www.leaksapi.com/signup");
+        } else {
+            res.render("signup.ejs", { message: req.flash('signupMessage') });
+        }
     });
 
     /*
@@ -47,10 +50,11 @@ module.exports = function (app, passport) {
      */
     app.get("/login", function(req, res) {
         // Check if Production and no SSL
-        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https")
-             res.redirect("https://www.leaksapi.com/signup");
-
-        res.render("login.ejs", { message: req.flash('loginMessage') });
+        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https") {
+            res.redirect("https://www.leaksapi.com/signup");
+        } else {
+            res.render("login.ejs", { message: req.flash('loginMessage') });
+        }
     });
 
     /*
