@@ -27,6 +27,9 @@ module.exports = function (app, passport) {
      *  GET: Loads the signup page
      */
     app.get("/signup", function(req, res) {
+        // Check if Production and no SSL
+        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https")
+             res.redirect("https://www.leaksapi.com/signup");
         res.render("signup.ejs", { message: req.flash('signupMessage') });
     });
 
@@ -43,6 +46,10 @@ module.exports = function (app, passport) {
      *  GET: Loads the login page
      */
     app.get("/login", function(req, res) {
+        // Check if Production and no SSL
+        if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https")
+             res.redirect("https://www.leaksapi.com/signup");
+
         res.render("login.ejs", { message: req.flash('loginMessage') });
     });
 

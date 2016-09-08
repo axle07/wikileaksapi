@@ -11,4 +11,5 @@ module.exports = {
     sessionSecret: process.env.SESSION_SECRET,
     letsEncryptKey: process.env.LETS_ENCRYPT_KEY,
     letsEncryptKey2: process.env.LETS_ENCRYPT_KEY2,
+    environment: process.env.NODE_ENV || "dev",
 }
