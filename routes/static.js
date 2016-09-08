@@ -27,7 +27,6 @@ module.exports = function (app, passport) {
      *  GET: Loads the signup page
      */
     app.get("/signup", function(req, res) {
-        console.log("headers: ", req.headers);
         // Check if Production and no SSL
         if (config.environment != "dev" && req.headers['x-forwarded-proto'] != "https") {
             res.redirect("https://www.leaksapi.com/signup");
